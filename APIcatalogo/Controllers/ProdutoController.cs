@@ -5,8 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace APIcatalogo.Controllers
 {
     [ApiController]
-    [Route("Controller")]
-
+    [Route("api/[Controller]")]
     public class ProdutoController : Controller
     {
         private readonly AppDbContext _context;
@@ -16,28 +15,43 @@ namespace APIcatalogo.Controllers
         _context = context;
         }
 
-        [HttpGet]
-
-        public ActionResult<IEnumerable<Produto>> Get() 
+        [HttpGet("Primeiro")]
+        public ActionResult<Produto> GetPrimeiro() 
         {
-            var Produtos = _context.Produtos.ToList();
+         var produtos = _context.Produtos.FirstOrDefault();
+
+            if(produtos is null) 
+            {
+             return NotFound();
+            }
+
+            return produtos;
+        
+        }
+
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Produto>>> Get() 
+        {
+            var Produtos = _context.Produtos.ToListAsync();
             if(Produtos is null) 
             {
                 return NotFound("Produtos não encontrados...");
             }
-            return Produtos;
+            return await Produtos;
             
         }
 
-        [HttpGet("{id:int}", Name="ObterProduto")]
-        public ActionResult<Produto> Get(int id) 
+        [HttpGet("{id:int:min(1)}", Name="ObterProduto")]
+
+        public async Task<ActionResult<Produto>> Get(int id) 
         {
-            var Produto = _context.Produtos.FirstOrDefault(p => p.ProdutoId == id);
+            var Produto = _context.Produtos.FirstOrDefaultAsync(p => p.ProdutoId == id);
             if(Produto is null) 
             {
                 return NotFound("Produto não encontrado!");
             }
-            return Produto;
+            return await Produto;
         
         }
         [HttpPost]

@@ -1,5 +1,8 @@
 
 using APIcatalogo.Context;
+using APIcatalogo.Extensions;
+using APIcatalogo.Filters;
+using APIcatalogo.Logging;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -12,7 +15,16 @@ namespace APIcatalogo
             var builder = WebApplication.CreateBuilder(args);
 
 
-            builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+            builder.Services.AddControllers(options =>
+            {
+
+                //FILTRO P TRATAR CONTROLLERS EXEPECTION
+                options.Filters.Add(typeof(ApiExceptionFilter));
+            }).AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+
+            });
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -21,7 +33,12 @@ namespace APIcatalogo
             builder.Services.AddDbContext<AppDbContext>(options =>
                                 options.UseMySql(mySqlConnection,
                                 ServerVersion.AutoDetect(mySqlConnection)));
+            builder.Services.AddScoped<ApiLoggingFilter>();
 
+            builder.Logging.AddProvider(new CustomLoggerProvider(new CustomLoggerProviderConfiguration
+            {
+                LogLevel = LogLevel.Information
+            }));
           
             var app = builder.Build();
 
@@ -30,6 +47,7 @@ namespace APIcatalogo
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+                app.ConfigureExceptionHandler();
             }
 
             app.UseHttpsRedirection();
