@@ -20,7 +20,7 @@ namespace APIcatalogo.Repositories
 
         }
 
-        public Categoria GetCateogria(int id)
+        public Categoria GetCategoriaID(int id)
         {
             var categoria = _context.Categorias.FirstOrDefault(x => x.CategoriaId == id);
             return categoria;
@@ -39,18 +39,18 @@ namespace APIcatalogo.Repositories
 
         }
 
-        public Categoria Update(int id, Categoria categoria)
+        public Categoria Update(Categoria categoria)
         {
-            var cat = _context.Categorias.FirstOrDefault(x=> x.CategoriaId==id);
+          
 
-            if (id != categoria.CategoriaId)
+            if (categoria is null)
             {
                 throw new ArgumentNullException(nameof(categoria));
 
             }
             _context.Entry(categoria).State = EntityState.Modified;
             _context.SaveChanges();
-            return cat;
+            return categoria;
 
         }
 

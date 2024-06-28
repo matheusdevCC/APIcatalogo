@@ -10,11 +10,11 @@ namespace APIcatalogo.Repositories
     {
         IEnumerable<Categoria> GetCategorias();
         
-        Categoria GetCateogria(int id);
+        Categoria GetCategoriaID(int id);
         
         Categoria Create(Categoria categoria);
         
-        Categoria Update(int id, Categoria categoria);
+        Categoria Update(Categoria categoria);
         
         Categoria Delete(int id);
     }

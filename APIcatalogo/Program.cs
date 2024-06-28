@@ -3,6 +3,7 @@ using APIcatalogo.Context;
 using APIcatalogo.Extensions;
 using APIcatalogo.Filters;
 using APIcatalogo.Logging;
+using APIcatalogo.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -34,6 +35,8 @@ namespace APIcatalogo
                                 options.UseMySql(mySqlConnection,
                                 ServerVersion.AutoDetect(mySqlConnection)));
             builder.Services.AddScoped<ApiLoggingFilter>();
+            builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
+            builder.Services.AddScoped<IprodutoRepository, ProdutoRepository>();
 
             builder.Logging.AddProvider(new CustomLoggerProvider(new CustomLoggerProviderConfiguration
             {

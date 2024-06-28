@@ -16,10 +16,10 @@ namespace APIcatalogo.Filters
         {
             _logger.LogError(context.Exception, "Ocorreu uma exceção não tratada: Status code 500");
 
-            context.Result = new ObjectResult("Ocorreu um problema ao tratar a sua solicitaão? Code 500")
+            context.Result = new ObjectResult("Ocorreu um problema ao tratar a sua solicitação? Code 500")
             {
                 StatusCode = StatusCodes.Status500InternalServerError,
-            }
+            };
 
         }
     }
